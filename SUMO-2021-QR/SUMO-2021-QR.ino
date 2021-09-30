@@ -66,7 +66,7 @@ void detener(){
 }
 
 float convertirCm(float lecturaSensor){
-float vin = lecturaSensor * 0.0049;
-float r = (2.5 - vin) / 0.034;
-return r;
+  float vin = lecturaSensor * 0.0049;
+  float r = (2.5 - vin) / 0.034;
+  return r;
 }
