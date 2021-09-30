@@ -1,10 +1,10 @@
 //hola esto es una prueba x3sasads
 //variables motores
-const int motorIzqAdelante = 10;
-const int motorIzqReversa = 11;
+const int motorIzqAdelante = 11;
+const int motorIzqReversa = 10;
 
-const int motorDerAdelante = 5;
-const int motorDerReversa = 6;
+const int motorDerAdelante = 6;
+const int motorDerReversa = 5;
 
 void setup() {
   
@@ -18,6 +18,7 @@ pinMode(motorIzqAdelante, OUTPUT); //Motor1      //MOTOR IZQUIERDO
 pinMode(motorIzqReversa, OUTPUT); //Fin Motor1   //MOTOR IZQUIERDO
 pinMode(motorDerAdelante, OUTPUT); //Motor2       //MOTOR DERECHO
 pinMode(motorDerReversa, OUTPUT); //Fin Motor2   //MOTOR DERECHO
+avanzar();
 }
 
 void loop() {
@@ -33,20 +34,27 @@ Serial.print(convertirCm(sensorDer));
 delay(1000);
 }
 
-void fronts() {
+void avanzar() {
   Serial.println("Avanzar");
-  analogWrite(motorDerAdelante, 50);
+  analogWrite(motorDerAdelante, 255);
   analogWrite(motorDerReversa, 0);
-  analogWrite(motorIzqAdelante, 50);
+  analogWrite(motorIzqAdelante, 255);
   analogWrite(motorIzqReversa, 0);
 }
 
-void buscar() {
+void buscarIzq() {
   Serial.println("Buscar");
-  analogWrite(motorIzqAdelante, 50);
+  analogWrite(motorIzqAdelante, 0);
+  analogWrite(motorIzqReversa, 255);
+  analogWrite(motorDerAdelante, 255);
+  analogWrite(motorDerReversa, 0);  
+}
+void buscarDer() {
+  Serial.println("Buscar");
+  analogWrite(motorIzqAdelante, 255);
   analogWrite(motorIzqReversa, 0);
   analogWrite(motorDerAdelante, 0);
-  analogWrite(motorDerReversa, 0);  
+  analogWrite(motorDerReversa, 255);  
 }
 
 void detener(){
