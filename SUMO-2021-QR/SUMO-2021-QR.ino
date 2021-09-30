@@ -1,35 +1,54 @@
-//hola esto es una prueba x3sasads
-//variables motores
+//Variables motores
 const int motorIzqAdelante = 11;
 const int motorIzqReversa = 10;
 
 const int motorDerAdelante = 6;
 const int motorDerReversa = 5;
 
+//Variables sensores
+#define sensorIzqPin A1
+#define sensorDerPin A2
+
 void setup() {
   
 Serial.begin(9600);
-// Se declara el pin y se pone como entrada, ya que
-// va a recibir datos  
 
-pinMode(A1, INPUT); //Sensor izquierdo 
-pinMode(A2, INPUT); //SENSOR DERECHO
+// Pines de sensores 
+pinMode(sensorIzqPin, INPUT); //Sensor izquierdo 
+pinMode(sensorDerPin, INPUT); //SENSOR DERECHO
+
+//Pines de motores
 pinMode(motorIzqAdelante, OUTPUT); //Motor1      //MOTOR IZQUIERDO
 pinMode(motorIzqReversa, OUTPUT); //Fin Motor1   //MOTOR IZQUIERDO
 pinMode(motorDerAdelante, OUTPUT); //Motor2       //MOTOR DERECHO
 pinMode(motorDerReversa, OUTPUT); //Fin Motor2   //MOTOR DERECHO
-avanzar();
 }
 
 void loop() {
 
-float sensorIzq = analogRead(A1);
+//Lectura del sensor izquierdo
+float sensorIzq = analogRead(sensorIzqPin);
 Serial.print("Sensor Izquierdo: ");
-Serial.print(convertirCm(sensorIzq));
+sensorIzq = convertirCm(sensorIzq);
+Serial.print(sensorIzq);
 
-float sensorDer = analogRead(A2);
+//Lectura del sensor derecho 
+float sensorDer = analogRead(sensorDerPin);
 Serial.print("Sensor Derecho: ");
-Serial.print(convertirCm(sensorDer));
+sensorDer = convertirCm(sensorDer);
+Serial.print(sensorDer);
+
+if(sensorIzq < 45 && sensorDer < 45){
+  avanzar();
+}
+else if (sensorIzq >= 45 && sensorDer < 45){
+  buscarIzq();
+}
+else if (sensorIzq < 45 && sensorDer >= 45){
+  buscarDer();
+} else{
+  detener();
+}
 
 delay(1000);
 }
@@ -42,6 +61,7 @@ void avanzar() {
   analogWrite(motorIzqReversa, 0);
 }
 
+//Girar a la izquierda
 void buscarIzq() {
   Serial.println("Buscar");
   analogWrite(motorIzqAdelante, 0);
@@ -49,6 +69,8 @@ void buscarIzq() {
   analogWrite(motorDerAdelante, 255);
   analogWrite(motorDerReversa, 0);  
 }
+
+//Girar a la derecha
 void buscarDer() {
   Serial.println("Buscar");
   analogWrite(motorIzqAdelante, 255);
@@ -65,6 +87,7 @@ void detener(){
   analogWrite(motorDerReversa, 0);
 }
 
+//Convertir a Centimetros las lecturas del sensor
 float convertirCm(float lecturaSensor){
   float vin = lecturaSensor * 0.0049;
   float r = (2.5 - vin) / 0.034;
