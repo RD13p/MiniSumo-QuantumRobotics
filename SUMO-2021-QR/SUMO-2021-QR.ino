@@ -7,6 +7,7 @@ const int motorDerReversa = 5;
 
 //Distancia detección
 int dist  = 30;
+int distFueraRango = 70;
 
 //Bandera 
 // 0 = en frente - sin valor
@@ -35,10 +36,10 @@ pinMode(motorDerReversa, OUTPUT); //Fin Motor2   //MOTOR DERECHO
 
 void loop() {
 //Si sabemos que el otro sumo se fue por la izquierda, seguimos girando a la izquierda hasta encontrarlo
-//if (bandera == 1) buscarIzq();
+if (bandera == 1) buscarIzq();
 
 //Si sabemos que el otro sumo se fue por la derecha, seguimos girando a la derecha hasta encontrarlo
-//if (bandera == 2) buscarDer();
+if (bandera == 2) buscarDer();
 
 //Lectura del sensor izquierdo
 float sensorIzq = analogRead(sensorIzqPin);
@@ -52,30 +53,30 @@ Serial.print("Sensor Derecho: ");
 sensorDer = convertirCm(sensorDer);
 Serial.println(sensorDer);
 
-//Si esta cerca
 if (sensorIzq < dist && sensorDer < dist){
 avanzar();
 bandera = 0;
+while(sensorIzq >= distFueraRango && sensorDer >= distFueraRango){
+  avanzar();
+  sensorIzq = analogRead(sensorIzqPin);
+  sensorIzq = convertirCm(sensorIzq);
+
+  sensorDer = analogRead(sensorDerPin);
+  sensorDer = convertirCm(sensorDer);
+  }
 }
 
-if ((sensorIzq >= dist && sensorDer < dist) || bandera == 1){ 
-bandera = 1;
-Serial.print("Bandera = 1");
+if (sensorIzq >= dist && sensorDer < dist){ 
 buscarIzq();
+bandera = 1;
 }
 
-if ((sensorIzq < dist && sensorDer >= dist) || bandera == 2){
+if (sensorIzq < dist && sensorDer >= dist){
+buscarDer();
 bandera = 2;
-Serial.print("Bandera = 2");
-buscarDer();
 }
 
-//Condicion inicial
-if (sensorIzq >= dist && sensorDer >= dist){
-bandera=0;
-buscarDer();
-}
-
+if (sensorIzq > dist && sensorDer > dist) detener(100);
 
 }
 
@@ -105,12 +106,13 @@ void buscarDer() {
   analogWrite(motorDerReversa, 0);  
 }
 
-void detener(){
+void detener(float microseconds){
   Serial.println("Detenido");
   analogWrite(motorIzqAdelante, 255);
   analogWrite(motorIzqReversa, 255);
   analogWrite(motorDerAdelante, 255);
   analogWrite(motorDerReversa, 255);
+  delay(microseconds);
 }
 
 //Convertir a Centimetros las lecturas del sensor
