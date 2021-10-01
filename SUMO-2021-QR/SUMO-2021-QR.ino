@@ -8,6 +8,12 @@ const int motorDerReversa = 5;
 //Distancia detección
 int dist  = 30;
 
+//Bandera 
+// 0 = en frente - sin valor
+// 1 = izquierda
+// 2 = derecha
+int bandera = 0;
+
 //Variables sensores
 #define sensorIzqPin A1
 #define sensorDerPin A2
@@ -28,6 +34,11 @@ pinMode(motorDerReversa, OUTPUT); //Fin Motor2   //MOTOR DERECHO
 }
 
 void loop() {
+//Si sabemos que el otro sumo se fue por la izquierda, seguimos girando a la izquierda hasta encontrarlo
+if (bandera == 1) buscarIzq();
+
+//Si sabemos que el otro sumo se fue por la derecha, seguimos girando a la derecha hasta encontrarlo
+if (bandera == 2) buscarDer();
 
 //Lectura del sensor izquierdo
 float sensorIzq = analogRead(sensorIzqPin);
@@ -41,9 +52,21 @@ Serial.print("Sensor Derecho: ");
 sensorDer = convertirCm(sensorDer);
 Serial.println(sensorDer);
 
-if (sensorIzq < dist && sensorDer < dist) avanzar();
-if (sensorIzq >= dist && sensorDer < dist) buscarIzq();
-if (sensorIzq < dist && sensorDer >= dist) buscarDer();
+if (sensorIzq < dist && sensorDer < dist){
+avanzar();
+bandera = 0;
+}
+
+if (sensorIzq >= dist && sensorDer < dist){ 
+buscarIzq();
+bandera = 1;
+}
+
+if (sensorIzq < dist && sensorDer >= dist){
+buscarDer();
+bandera = 2;
+}
+
 if (sensorIzq > dist && sensorDer > dist) detener(100);
 
 }
