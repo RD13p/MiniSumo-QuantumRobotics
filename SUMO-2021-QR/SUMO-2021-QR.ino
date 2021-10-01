@@ -5,6 +5,9 @@ const int motorIzqReversa = 10;
 const int motorDerAdelante = 6;
 const int motorDerReversa = 5;
 
+//Distancia detección
+int dist  = 30;
+
 //Variables sensores
 #define sensorIzqPin A1
 #define sensorDerPin A2
@@ -30,27 +33,19 @@ void loop() {
 float sensorIzq = analogRead(sensorIzqPin);
 Serial.print("Sensor Izquierdo: ");
 sensorIzq = convertirCm(sensorIzq);
-Serial.print(sensorIzq);
+Serial.println(sensorIzq);
 
 //Lectura del sensor derecho 
 float sensorDer = analogRead(sensorDerPin);
 Serial.print("Sensor Derecho: ");
 sensorDer = convertirCm(sensorDer);
-Serial.print(sensorDer);
+Serial.println(sensorDer);
 
-if(sensorIzq < 45 && sensorDer < 45){
-  avanzar();
-}
-else if (sensorIzq >= 45 && sensorDer < 45){
-  buscarIzq();
-}
-else if (sensorIzq < 45 && sensorDer >= 45){
-  buscarDer();
-} else{
-  detener();
-}
+if (sensorIzq < dist && sensorDer < dist) avanzar();
+if (sensorIzq >= dist && sensorDer < dist) buscarIzq();
+if (sensorIzq < dist && sensorDer >= dist) buscarDer();
+if (sensorIzq > dist && sensorDer > dist) detener(100);
 
-delay(1000);
 }
 
 void avanzar() {
@@ -65,26 +60,27 @@ void avanzar() {
 void buscarIzq() {
   Serial.println("Buscar");
   analogWrite(motorIzqAdelante, 0);
-  analogWrite(motorIzqReversa, 255);
-  analogWrite(motorDerAdelante, 255);
+  analogWrite(motorIzqReversa, 0);
+  analogWrite(motorDerAdelante, 100);
   analogWrite(motorDerReversa, 0);  
 }
 
 //Girar a la derecha
 void buscarDer() {
   Serial.println("Buscar");
-  analogWrite(motorIzqAdelante, 255);
+  analogWrite(motorIzqAdelante, 100); 
   analogWrite(motorIzqReversa, 0);
   analogWrite(motorDerAdelante, 0);
-  analogWrite(motorDerReversa, 255);  
+  analogWrite(motorDerReversa, 0);  
 }
 
-void detener(){
+void detener(float microseconds){
   Serial.println("Detenido");
-  analogWrite(motorIzqAdelante, 0);
-  analogWrite(motorIzqReversa, 0);
-  analogWrite(motorDerAdelante, 0);
-  analogWrite(motorDerReversa, 0);
+  analogWrite(motorIzqAdelante, 255);
+  analogWrite(motorIzqReversa, 255);
+  analogWrite(motorDerAdelante, 255);
+  analogWrite(motorDerReversa, 255);
+  delay(microseconds);
 }
 
 //Convertir a Centimetros las lecturas del sensor
