@@ -22,6 +22,9 @@ int bandera = 0;
 void setup() {
   
 Serial.begin(9600);
+delay(5000);
+avanzar();
+delay(200);
 
 // Pines de sensores 
 pinMode(sensorIzqPin, INPUT); //Sensor izquierdo 
