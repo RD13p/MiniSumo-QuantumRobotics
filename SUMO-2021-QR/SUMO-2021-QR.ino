@@ -23,8 +23,6 @@ void setup() {
   
 Serial.begin(9600);
 delay(5000);
-avanzar();
-delay(200);
 
 // Pines de sensores 
 pinMode(sensorIzqPin, INPUT); //Sensor izquierdo 
@@ -114,18 +112,20 @@ void avanzar() {
 void buscarIzq() {
   Serial.println("Buscar");
   analogWrite(motorIzqAdelante, 0);
-  analogWrite(motorIzqReversa, 0);
-  analogWrite(motorDerAdelante, 100);
-  analogWrite(motorDerReversa, 0);  
+  analogWrite(motorIzqReversa, 75);
+  analogWrite(motorDerAdelante, 75);
+  analogWrite(motorDerReversa, 0); 
+  delay(5);   
 }
 
 //Girar a la derecha
 void buscarDer() {
   Serial.println("Buscar");
-  analogWrite(motorIzqAdelante, 100); 
+  analogWrite(motorIzqAdelante, 0); 
   analogWrite(motorIzqReversa, 0);
   analogWrite(motorDerAdelante, 0);
-  analogWrite(motorDerReversa, 0);  
+  analogWrite(motorDerReversa, 75);
+  delay(5);  
 }
 
 void detener(){
