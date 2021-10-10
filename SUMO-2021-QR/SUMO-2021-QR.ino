@@ -1,9 +1,9 @@
 //Variables motores
-const int motorIzqAdelante = 11;
-const int motorIzqReversa = 10;
+const int motorIzqAdelante = 6;
+const int motorIzqReversa = 5;
 
-const int motorDerAdelante = 6;
-const int motorDerReversa = 5;
+const int motorDerAdelante =11;
+const int motorDerReversa = 10;
 
 //Distancia detección
 int dist  = 15;
@@ -23,6 +23,10 @@ void setup() {
   
 Serial.begin(9600);
 delay(5000);
+avanzar();
+delay(3000);
+detener();
+delay(8000);
 
 // Pines de sensores 
 pinMode(sensorIzqPin, INPUT); //Sensor izquierdo 
@@ -58,7 +62,7 @@ Serial.println(sensorDer);
 if (sensorIzq < dist && sensorDer < dist){
 avanzar();
 bandera = 0;
-  if ((sensorIzq < mindist || sensorDer < mindist) || (sensorIzq > maxdist || sensorDer > maxdist)) {
+  if ((sensorIzq < mindist || sensorDer < mindist) || (sensorIzq > maxdist || sensorDer > maxdist)) { //Si no detecta nada en el rango establecido
     while (true) {
     Serial.print("Entre en el loop");
     avanzar();
@@ -87,7 +91,7 @@ buscarDer();
 }
 
 //Condicion inicial
-if (sensorIzq >= dist && sensorDer >= dist){
+if (sensorIzq >= dist && sensorDer >= dist){ //Si ningún sensor detecta al otro bot
   if (bandera == 0){
     buscarDer();
   }
@@ -104,7 +108,7 @@ void avanzar() {
   Serial.println("Avanzar");
   analogWrite(motorDerAdelante, 255);
   analogWrite(motorDerReversa, 0);
-  analogWrite(motorIzqAdelante, 255);
+  analogWrite(motorIzqAdelante, 180);
   analogWrite(motorIzqReversa, 0);
 }
 
@@ -112,8 +116,8 @@ void avanzar() {
 void buscarIzq() {
   Serial.println("Buscar");
   analogWrite(motorIzqAdelante, 0);
-  analogWrite(motorIzqReversa, 75);
-  analogWrite(motorDerAdelante, 75);
+  analogWrite(motorIzqReversa, 110);
+  analogWrite(motorDerAdelante, 110);
   analogWrite(motorDerReversa, 0); 
   delay(5);   
 }
@@ -121,10 +125,10 @@ void buscarIzq() {
 //Girar a la derecha
 void buscarDer() {
   Serial.println("Buscar");
-  analogWrite(motorIzqAdelante, 0); 
+  analogWrite(motorIzqAdelante, 80); 
   analogWrite(motorIzqReversa, 0);
   analogWrite(motorDerAdelante, 0);
-  analogWrite(motorDerReversa, 75);
+  analogWrite(motorDerReversa, 110);
   delay(5);  
 }
 
